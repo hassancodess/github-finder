@@ -9,14 +9,15 @@ function About() {
           <a
             href='https://www.udemy.com/course/react-front-to-back-2022/'
             target='_blank'
+            className= 'underline underline-offset-4'
           >
             React Front to Back 2022
           </a>{' '}
         </strong>
         Udemy course by
         <strong>
-          <a href='https://traversymedia.com' target='_blank'>
             {' '}
+          <a href='https://traversymedia.com' target='_blank' className= 'underline underline-offset-4'>
             Brad Traversy
           </a>
         </strong>

@@ -1,37 +1,44 @@
 import GithubContext from './GithubContext'
-import { useState } from 'react'
+import GithubReducer from './GithubReducer'
+import { useReducer } from 'react'
 
 const GITHUB_URL = import.meta.env.VITE_GITHUB_URL
 const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 
 function GithubProvider({ children }) {
-  // States 👇
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(true)
-  // States 👆
+  const initialState = {
+    users: [],
+    loading: false,
+  }
+  const [state, dispatch] = useReducer(GithubReducer, initialState)
 
-  // Fetching Users from the Github API 👇
-  const fetchUsers = async () => {
-    const response = await fetch(`${GITHUB_URL}/users`, {
+  // Search Users from the Github API 👇
+  const searchUsers = async (text) => {
+    setLoading()
+    const params = new URLSearchParams({
+      q: text,
+    })
+
+    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
       headers: {
         Authorization: `${GITHUB_TOKEN}`,
       },
     })
     if (response.status == 200) {
-      const data = await response.json()
-      setUsers(data)
-      setLoading(false)
-    } else {
-      setLoading(true)
+      const { items } = await response.json()
+      dispatch({
+        type: 'GET_USER',
+        payload: items,
+      })
     }
   }
   // Fetching Users from the Github API 👆
-
+  const setLoading = () => dispatch({ type: 'SET_LOADING' })
   // Values to be exported 👇
   const values = {
-    users,
-    loading,
-    fetchUsers,
+    users: state.users,
+    loading: state.loading,
+    searchUsers,
   }
   // Values to be exported 👆
   return (

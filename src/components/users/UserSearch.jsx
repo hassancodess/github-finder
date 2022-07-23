@@ -1,37 +1,43 @@
 import { useState, useContext } from 'react'
 import GithubContext from '../../context/github/GithubContext'
+import Alert from '../shared/Alert'
 
 function UserSearch() {
   const [text, setText] = useState('')
-  const [alertHidden, setAlertHidden] = useState(true)
-
+  const [alert, setAlert] = useState(false)
+  const errorMsg = 'Error! Please enter something.'
   const { searchUsers } = useContext(GithubContext)
 
   const handleTextChange = (e) => {
     setText(e.target.value)
     if (e.target.value.length > 0) {
-      setAlertHidden(true)
     }
   }
   const handleSubmit = (e) => {
     e.preventDefault()
 
     if (text == '') {
-      setAlertHidden(false)
+      handleAlert()
     } else {
-      setAlertHidden(true)
       searchUsers(text)
     }
   }
+  const handleAlert = () => {
+    setAlert(true)
+    setTimeout(() => {
+      setAlert(false)
+    }, 1000)
+  }
   return (
     <form onSubmit={handleSubmit}>
-      <div className='flex flex-col items-center gap-4'>
+      <div className='flex flex-col items-center gap-4 mb-4'>
+        <Alert msg={errorMsg} hidden={alert} />
         <div className='form-control w-1/2'>
           <div className='input-group'>
             <input
               type='text'
               placeholder='Search…'
-              className='input w-full max-w-2xl input-bordered'
+              className='input w-full max-w-2xl input-bordered z-10'
               value={text}
               onChange={handleTextChange}
             />
@@ -51,28 +57,6 @@ function UserSearch() {
                 />
               </svg>
             </button>
-          </div>
-        </div>
-        <div
-          className={`alert alert-error shadow-lg w-1/3 h-12 ${
-            alertHidden && 'hidden'
-          }`}
-        >
-          <div>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              className='stroke-current flex-shrink-0 h-6 w-6'
-              fill='none'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'
-              />
-            </svg>
-            <span>Error! Please Enter Something.</span>
           </div>
         </div>
       </div>

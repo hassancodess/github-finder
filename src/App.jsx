@@ -5,6 +5,7 @@ import Home from './Pages/Home'
 import About from './Pages/About'
 import NotFound from './Pages/NotFound'
 import GithubProvider from './context/github/GithubProvider'
+import User from './Pages/User'
 function App() {
   return (
     <GithubProvider>
@@ -16,6 +17,7 @@ function App() {
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/about' element={<About />} />
+              <Route path='/users/:login' element={<User />} />
               <Route path='/*' element={<NotFound />} />
             </Routes>
           </div>

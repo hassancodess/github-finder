@@ -12,10 +12,11 @@ function AlertProvider({ children }) {
 
     setTimeout(() => {
       dispatch({ type: 'REMOVE_ALERT' })
-    }, 2000)    
+    }, 2000)
   }
 
   const values = { alert: state, setAlert }
+
   return (
     <AlertContext.Provider value={values}>{children}</AlertContext.Provider>
   )

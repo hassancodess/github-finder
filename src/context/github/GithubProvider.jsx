@@ -8,6 +8,7 @@ const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 function GithubProvider({ children }) {
   const initialState = {
     users: [],
+    user: {},
     loading: false,
   }
   const [state, dispatch] = useReducer(GithubReducer, initialState)
@@ -27,17 +28,42 @@ function GithubProvider({ children }) {
     if (response.status == 200) {
       const { items } = await response.json()
       dispatch({
-        type: 'GET_USER',
+        type: 'GET_USERS',
         payload: items,
       })
     }
   }
-  // Fetching Users from the Github API 👆
+  // Search Users from the Github API 👆
+
+  // Get Single User
+  const getUser = async (login) => {
+    setLoading()
+
+    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+      headers: {
+        Authorization: `${GITHUB_TOKEN}`,
+      },
+    })
+    if (response.status == 200) {
+      const data = await response.json()
+      dispatch({
+        type: 'GET_USER',
+        payload: data,
+      })
+    } else if (response.status !== 200) {
+      window.location = '/notfound'
+    }
+  }
+  // Get Single User
+
   const setLoading = () => dispatch({ type: 'SET_LOADING' })
+
   // Values to be exported 👇
   const values = {
     users: state.users,
+    user: state.user,
     loading: state.loading,
+    getUser,
     searchUsers,
   }
   // Values to be exported 👆
